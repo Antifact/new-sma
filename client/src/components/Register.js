@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container, Alert } from "react-bootstrap";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -16,6 +16,7 @@ const Register = () => {
     try {
       const newUser = { username, email, password, bio, image };
       await axios.post("http://localhost:5000/users", newUser);
+      <Alert variant="success">Successfully signed up!</Alert>
       navigate("/home");
     } catch (err) {
       console.error(err);
