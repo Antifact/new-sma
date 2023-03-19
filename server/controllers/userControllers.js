@@ -1,5 +1,7 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const genToken = require('../utils/genToken');
+
 
 const registerUser = async (req, res) => {
   try {
@@ -29,4 +31,23 @@ const registerUser = async (req, res) => {
   }
 }
 
-module.exports = registerUser;
+const loginUser = asyncHandler( async (req, res) => {
+  const { username, password } = req.body;
+
+  const user = await User.findOne({ username });
+
+  if (user && (await user.matchPassword(password))) {
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      admin: user.admin,
+      token: genToken(user.id)
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid username or password!')
+  }
+});
+
+module.exports = { registerUser, loginUser };
